@@ -1,6 +1,10 @@
 package com.makoto;
 
+import com.google.inject.Guice;
+import com.makoto.controllers.StudentController;
+import com.makoto.controllers.TeacherController;
 import io.javalin.Javalin;
+import io.javalin.apibuilder.ApiBuilder;
 import io.javalin.openapi.plugin.OpenApiConfiguration;
 import io.javalin.openapi.plugin.OpenApiPlugin;
 import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
@@ -12,13 +16,26 @@ import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
  */
 public class App {
     public static void main(String[] args) {
+
+        var injector = Guice.createInjector();
         Javalin.create(config -> {
             var openApiConfiguration = new OpenApiConfiguration();
             openApiConfiguration.getInfo().setTitle("Javalin OpenAPI example");
             config.plugins.register(new OpenApiPlugin(openApiConfiguration));
             config.plugins.register(new SwaggerPlugin(new SwaggerConfiguration()));
-        })
-                .get("/", ctx -> ctx.redirect("/swagger")) // redirect to swagger-ui
+        }).routes(() -> {
+            var controller = injector.getInstance(TeacherController.class);
+            ApiBuilder.crud(TeacherController.prefixRoute + "/{courseCode}", controller);
+        }).routes(() -> {
+            var controller = injector.getInstance(StudentController.class);
+            ApiBuilder.path("/api/v1/student/course", () -> {
+                ApiBuilder.get(controller::getAllCourse);
+                ApiBuilder.path("/register", () -> {
+                    ApiBuilder.post(controller::registerCourse);
+                    ApiBuilder.delete("/{courseCode}", controller::unregisterCourse);
+                });
+            });
+        }).get("/", ctx -> ctx.redirect("/swagger")) // redirect to swagger-ui
                 .start(8000);
     }
 }
