@@ -16,11 +16,11 @@ public class Teacher {
     public final static String FIELD_NAME = "name";
 
 
-    @DatabaseField(id = true)
+    @DatabaseField(generatedId = true)
     private int id;
 
     @DatabaseField(columnName = FEILD_TEACHER_ID, unique = true, canBeNull = false)
-    private String teacher_id;
+    private String teacherId;
 
     @DatabaseField(columnName = FIELD_NAME, canBeNull = false)
     private String name;

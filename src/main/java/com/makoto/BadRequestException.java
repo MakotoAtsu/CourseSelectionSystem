@@ -6,10 +6,9 @@ import lombok.Getter;
 public class BadRequestException extends Exception {
 
     private final int statusCode;
-    private final String reason;
 
     public BadRequestException(int statusCode, String reason) {
+        super(reason);
         this.statusCode = statusCode;
-        this.reason = reason;
     }
 }

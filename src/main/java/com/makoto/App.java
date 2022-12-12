@@ -1,5 +1,6 @@
 package com.makoto;
 
+import java.sql.SQLException;
 import com.google.inject.Guice;
 import com.makoto.controllers.AccountController;
 import com.makoto.controllers.StudentController;
@@ -44,6 +45,19 @@ public class App {
                 ApiBuilder.post("/teacher", controller::createTeacherAccount);
                 ApiBuilder.post("/student", controller::createStudentAccount);
             });
+        }).exception(BadRequestException.class, (e, ctx) -> {
+            ctx.status(e.getStatusCode()).json(new Object() {
+                public String message = e.getMessage();
+            });
+        }).exception(SQLException.class, (e, ctx) -> {
+            ctx.status(503).json(new Object() {
+                public String message = "Database is not avaliable now";
+            });
+        }).exception(Exception.class, (e, ctx) -> {
+            ctx.status(500).json(new Object() {
+                public String message = "Unknown Error";
+            });
+            e.printStackTrace();
         }).get("/", ctx -> ctx.redirect("/swagger")) // redirect to swagger-ui
                 .start(8000);
     }

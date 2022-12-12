@@ -33,7 +33,7 @@ public class StudentService {
                 var course = new CourseViewModel();
                 course.courseCode = x.getCourseCode();
                 course.name = x.getName();
-                course.teacher_id = x.getTeacher().getTeacher_id();
+                course.teacher_id = x.getTeacher().getTeacherId();
                 course.amount = x.getAmount();
                 return course;
             }).toList();
@@ -50,7 +50,7 @@ public class StudentService {
             var model = new CourseViewModel();
             model.courseCode = course.getCourseCode();
             model.name = course.getName();
-            model.teacher_id = course.getTeacher().getTeacher_id();
+            model.teacher_id = course.getTeacher().getTeacherId();
             model.amount = course.getAmount();
             model.description = course.getDescription();
             model.current_register = this.registerRepo.countRegisters(course);
@@ -61,37 +61,27 @@ public class StudentService {
         }
     }
 
-    public void registerCourse(String studentId, String courseCode) throws BadRequestException {
-        try {
-            var course = this.courseRepo.findByCode(courseCode);
-            if (course == null)
-                throw new BadRequestException(400, "course not exists");
-            var student = this.studentRepo.findByStudentId(studentId);
-            if (student == null)
-                throw new BadRequestException(400, "student not exists");
-            var registerInfo = new CourseRegister();
-            registerInfo.setStudent(student);
-            registerInfo.setCourse(course);
-            this.registerRepo.create(registerInfo);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // TODO: handle exception
-        }
+    public void registerCourse(String studentId, String courseCode) throws Exception {
+        var course = this.courseRepo.findByCode(courseCode);
+        if (course == null)
+            throw new BadRequestException(400, "course not exists");
+        var student = this.studentRepo.findByStudentId(studentId);
+        if (student == null)
+            throw new BadRequestException(400, "student not exists");
+        var registerInfo = new CourseRegister();
+        registerInfo.setStudent(student);
+        registerInfo.setCourse(course);
+        this.registerRepo.create(registerInfo);
     }
 
-    public void unregisterCourse(String studentId, String courseCode) throws BadRequestException {
-        try {
-            var student = this.studentRepo.findByStudentId(studentId);
-            if (student == null)
-                throw new BadRequestException(400, "student not exists");
-            var registerCourse = student.getRegisterCourse().stream()
-                    .filter(x -> x.getCourse().getCourseCode() == courseCode).findFirst()
-                    .orElse(null);
-            if (registerCourse != null)
-                this.registerRepo.deleteById(registerCourse.getId());
+    public void unregisterCourse(String studentId, String courseCode) throws Exception {
+        var student = this.studentRepo.findByStudentId(studentId);
+        if (student == null)
+            throw new BadRequestException(400, "student not exists");
+        var registerCourse = student.getRegisterCourse().stream()
+                .filter(x -> x.getCourse().getCourseCode() == courseCode).findFirst().orElse(null);
+        if (registerCourse != null)
+            this.registerRepo.deleteById(registerCourse.getId());
 
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
     }
 }

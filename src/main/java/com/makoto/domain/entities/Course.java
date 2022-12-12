@@ -1,6 +1,5 @@
 package com.makoto.domain.entities;
 
-import java.util.Collection;
 import com.j256.ormlite.field.*;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.*;
@@ -16,7 +15,7 @@ public class Course {
     public final static String FIELD_CODE = "code";
     public final static String FIELD_OWNER = "owner_id";
 
-    @DatabaseField(id = true)
+    @DatabaseField(generatedId = true)
     private int id;
 
     @DatabaseField(columnName = FIELD_CODE, unique = true, canBeNull = false)

@@ -15,7 +15,7 @@ public class Student {
     public static final String FIELD_STUDENT_ID = "student_id";
     public static final String FIELD_NAME = "name";
 
-    @DatabaseField(id = true)
+    @DatabaseField(generatedId = true)
     private int id;
 
     @DatabaseField(columnName = FIELD_STUDENT_ID, unique = true, canBeNull = false)

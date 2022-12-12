@@ -36,6 +36,7 @@ public class TeacherRepository {
 
     public boolean exist(String teacher_id) throws SQLException {
         QueryBuilder<Teacher, Integer> query = this.teacherDAO.queryBuilder();
+        query.setCountOf(true);
         query.where().eq(Teacher.FEILD_TEACHER_ID, teacher_id);
         return this.teacherDAO.countOf(query.prepare()) > 0;
     }
