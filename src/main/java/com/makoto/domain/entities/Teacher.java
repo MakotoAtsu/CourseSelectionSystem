@@ -16,7 +16,7 @@ public class Teacher {
     public final static String FIELD_NAME = "name";
 
 
-    @DatabaseField(id = true, generatedId = true)
+    @DatabaseField(id = true)
     private int id;
 
     @DatabaseField(columnName = FEILD_TEACHER_ID, unique = true, canBeNull = false)

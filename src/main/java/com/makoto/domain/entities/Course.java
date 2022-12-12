@@ -8,14 +8,14 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@DatabaseTable(tableName = "Accounts")
+@DatabaseTable(tableName = "Course")
 public class Course {
 
     public final static String FIELD_NAME = "name";
     public final static String FIELD_CODE = "code";
     public final static String FIELD_OWNER = "owner_id";
 
-    @DatabaseField(id = true, generatedId = true)
+    @DatabaseField(id = true)
     private int id;
 
     @DatabaseField(columnName = FIELD_CODE, unique = true, canBeNull = false)
