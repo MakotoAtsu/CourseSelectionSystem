@@ -19,14 +19,14 @@ public class Student {
     private int id;
 
     @DatabaseField(columnName = FIELD_STUDENT_ID, unique = true, canBeNull = false)
-    public String student_id;
+    private String studentId;
 
     @DatabaseField(columnName = FIELD_NAME, canBeNull = false)
-    public String name;
+    private String name;
 
     @DatabaseField
-    public int grade;
+    private int grade;
 
     @ForeignCollectionField
-    public Collection<CourseRegister> registerCourse;
+    private Collection<CourseRegister> registerCourse;
 }

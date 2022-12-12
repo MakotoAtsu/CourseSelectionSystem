@@ -1,5 +1,6 @@
 package com.makoto.domain.entities;
 
+import java.util.Collection;
 import com.j256.ormlite.field.*;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.*;

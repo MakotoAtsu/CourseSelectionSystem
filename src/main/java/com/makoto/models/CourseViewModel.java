@@ -8,9 +8,11 @@ public class CourseViewModel {
 
     public String teacher_id;
 
-    public int amount;
+    public Integer amount;
 
     public String semester;
 
     public String description;
+
+    public Integer current_register;
 }
