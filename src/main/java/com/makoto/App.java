@@ -1,6 +1,7 @@
 package com.makoto;
 
 import com.google.inject.Guice;
+import com.makoto.controllers.AccountController;
 import com.makoto.controllers.StudentController;
 import com.makoto.controllers.TeacherController;
 import io.javalin.Javalin;
@@ -34,6 +35,14 @@ public class App {
                     ApiBuilder.post(controller::registerCourse);
                     ApiBuilder.delete("/{courseCode}", controller::unregisterCourse);
                 });
+            });
+        }).routes(() -> {
+            var controller = injector.getInstance(AccountController.class);
+            ApiBuilder.path(AccountController.prefixRoute, () -> {
+                ApiBuilder.get("/teacher", controller::getAllTeachers);
+                ApiBuilder.get("/student", controller::getAllStudents);
+                ApiBuilder.post("/teacher", controller::createTeacherAccount);
+                ApiBuilder.post("/student", controller::createStudentAccount);
             });
         }).get("/", ctx -> ctx.redirect("/swagger")) // redirect to swagger-ui
                 .start(8000);
