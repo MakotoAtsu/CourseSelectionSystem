@@ -10,5 +10,4 @@ public class StudentViewModel {
     public String name;
 
     public int grade;
-
 }

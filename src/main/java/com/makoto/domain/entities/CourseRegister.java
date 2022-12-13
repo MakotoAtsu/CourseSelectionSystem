@@ -16,11 +16,11 @@ public class CourseRegister {
     @DatabaseField(generatedId = true)
     private int id;
 
-    @DatabaseField(foreign = true, columnName = FIELD_COURSE_ID, canBeNull = false,
+    @DatabaseField(foreign = true, foreignAutoRefresh = true,columnName = FIELD_COURSE_ID, canBeNull = false,
             uniqueCombo = true)
     private Course course;
 
-    @DatabaseField(foreign = true, columnName = FIELD_STUDENT_ID, canBeNull = false,
+    @DatabaseField(foreign = true, foreignAutoRefresh = true,columnName = FIELD_STUDENT_ID, canBeNull = false,
             uniqueCombo = true)
     private Student student;
 }

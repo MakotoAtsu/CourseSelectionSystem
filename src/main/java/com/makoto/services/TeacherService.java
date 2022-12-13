@@ -8,6 +8,7 @@ import com.makoto.BadRequestException;
 import com.makoto.domain.entities.Course;
 import com.makoto.domain.entities.Teacher;
 import com.makoto.models.CourseViewModel;
+import com.makoto.repositories.CourseRegisterRepository;
 import com.makoto.repositories.CourseRepository;
 import com.makoto.repositories.TeacherRepository;
 
@@ -21,29 +22,28 @@ public class TeacherService {
     public TeacherService(TeacherRepository teacherRepo, CourseRepository courseRepo) {
         this.teacherRepo = teacherRepo;
         this.courseRepo = courseRepo;
-
     }
 
-    public void createCourse(String teacherId, CourseViewModel model) throws BadRequestException {
-        try {
-            var teacher = getTeacher(teacherId);
-            var course = new Course();
-            course.setAmount(model.amount);
-            course.setCourseCode(model.courseCode);
-            course.setDescription(model.description);
-            course.setName(model.name);
-            course.setSemester(model.semester);
-            course.setTeacher(teacher);
-            this.courseRepo.create(course);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void createCourse(String teacherId, CourseViewModel model)
+            throws SQLException, BadRequestException {
+        var teacher = getTeacher(teacherId);
+        var course = new Course();
+        course.setAmount(model.amount);
+        course.setCourseCode(model.courseCode);
+        course.setDescription(model.description);
+        course.setName(model.name);
+        course.setSemester(model.semester);
+        course.setTeacher(teacher);
+        this.courseRepo.create(course);
     }
 
-    public void updateCourse(CourseViewModel model) throws Exception {
+    public void updateCourse(String teacherId, CourseViewModel model)
+            throws SQLException, BadRequestException {
         var course = this.courseRepo.findByCode(model.courseCode);
         if (course == null)
             throw new BadRequestException(400, "course not exist");
+        if (course.getTeacher().getTeacherId() != teacherId)
+            throw new BadRequestException(401, "Only owner can modify course");
         course.setAmount(model.amount);
         course.setCourseCode(model.courseCode);
         course.setDescription(model.description);
@@ -52,7 +52,8 @@ public class TeacherService {
         this.courseRepo.update(course);
     }
 
-    public void deleteCourse(String teacherId, String courseCode) throws Exception {
+    public void deleteCourse(String teacherId, String courseCode)
+            throws SQLException, BadRequestException {
         var course = this.courseRepo.findByCode(courseCode);
         if (course == null)
             throw new BadRequestException(400, "course not exist");
@@ -61,7 +62,8 @@ public class TeacherService {
         this.courseRepo.delete(course);
     }
 
-    public CourseViewModel getCourseInfo(String courseCode) throws Exception {
+    public CourseViewModel getCourseInfo(String courseCode)
+            throws SQLException, BadRequestException {
         var course = this.courseRepo.findByCode(courseCode);
         if (course == null)
             throw new BadRequestException(404, "courseCode: " + courseCode + " not exist");
@@ -70,7 +72,8 @@ public class TeacherService {
         return model;
     }
 
-    public Collection<CourseViewModel> getAllCourseByOwner(String teacherId) throws Exception {
+    public Collection<CourseViewModel> getAllCourseByOwner(String teacherId)
+            throws SQLException, BadRequestException {
         var teacher = this.teacherRepo.findByTeacherId(teacherId);
         if (teacher == null)
             throw new BadRequestException(404, "teacher: " + teacherId + " not exist");
@@ -86,6 +89,7 @@ public class TeacherService {
         model.description = course.getDescription();
         model.name = course.getName();
         model.semester = course.getSemester();
+        model.teacher_id = course.getTeacher().getTeacherId();
         return model;
     }
 

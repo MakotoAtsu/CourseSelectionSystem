@@ -36,6 +36,7 @@ public class CourseRegisterRepository {
 
     public int countRegisters(Course course) throws SQLException {
         QueryBuilder<CourseRegister, Integer> query = this.registerDAO.queryBuilder();
+        query.setCountOf(true);
         query.where().eq(CourseRegister.FIELD_COURSE_ID, course.getId());
         return (int) this.registerDAO.countOf(query.prepare());
     }

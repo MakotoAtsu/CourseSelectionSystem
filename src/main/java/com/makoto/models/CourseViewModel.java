@@ -1,5 +1,8 @@
 package com.makoto.models;
 
+import lombok.Getter;
+
+@Getter
 public class CourseViewModel {
 
     public String courseCode;
@@ -14,5 +17,4 @@ public class CourseViewModel {
 
     public String description;
 
-    public Integer current_register;
 }

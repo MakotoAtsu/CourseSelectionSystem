@@ -31,11 +31,13 @@ public class App {
         }).routes(() -> {
             var controller = injector.getInstance(StudentController.class);
             ApiBuilder.path("/api/v1/student/course", () -> {
-                ApiBuilder.get(controller::getAllCourse);
                 ApiBuilder.path("/register", () -> {
+                    ApiBuilder.get(controller::getAlreadyRegisterCourse);
                     ApiBuilder.post(controller::registerCourse);
                     ApiBuilder.delete("/{courseCode}", controller::unregisterCourse);
                 });
+                ApiBuilder.get(controller::getAllCourse);
+                ApiBuilder.get("/{courseCode}", controller::getCourseDetail);
             });
         }).routes(() -> {
             var controller = injector.getInstance(AccountController.class);

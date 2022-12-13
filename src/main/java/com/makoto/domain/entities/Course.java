@@ -13,7 +13,7 @@ public class Course {
 
     public final static String FIELD_NAME = "name";
     public final static String FIELD_CODE = "code";
-    public final static String FIELD_OWNER = "owner_id";
+    public final static String FIELD_OWNER = "teacher_id";
 
     @DatabaseField(generatedId = true)
     private int id;
@@ -24,7 +24,8 @@ public class Course {
     @DatabaseField(columnName = FIELD_NAME, canBeNull = false)
     private String name;
 
-    @DatabaseField(foreign = true, columnName = FIELD_OWNER, canBeNull = false)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = FIELD_OWNER,
+            canBeNull = false)
     private Teacher teacher;
 
     @DatabaseField(canBeNull = false)
