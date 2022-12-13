@@ -42,7 +42,7 @@ public class TeacherService {
         var course = this.courseRepo.findByCode(model.courseCode);
         if (course == null)
             throw new BadRequestException(400, "course not exist");
-        if (course.getTeacher().getTeacherId() != teacherId)
+        if (!course.getTeacher().getTeacherId().equals(teacherId))
             throw new BadRequestException(401, "Only owner can modify course");
         course.setAmount(model.amount);
         course.setCourseCode(model.courseCode);
@@ -57,7 +57,7 @@ public class TeacherService {
         var course = this.courseRepo.findByCode(courseCode);
         if (course == null)
             throw new BadRequestException(400, "course not exist");
-        if (course.getTeacher().getTeacherId() != teacherId)
+        if (!course.getTeacher().getTeacherId().equals(teacherId))
             throw new BadRequestException(401, "Only owner can be delete course");
         this.courseRepo.delete(course);
     }
